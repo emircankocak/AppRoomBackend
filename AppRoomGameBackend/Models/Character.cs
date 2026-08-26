@@ -24,6 +24,19 @@ namespace AppRoomGameBackend.Models
             }
         }
         
+        public bool SpendGold(int amount)
+        {
+            if(amount <=0)
+            {
+                return false;
+            }
+            if(amount > Gold)
+            {
+                return false;
+            }
+            Gold -= amount;
+            return true;
+        }
         
         public List<Item> Inventory { get; set; } = new List<Item>(); //Envanter Listesi
     }
