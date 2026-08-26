@@ -1,4 +1,5 @@
 ﻿using AppRoomGameBackend.Models;
+using AppRoomGameBackend.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppRoomGameBackend.Controllers
@@ -7,6 +8,14 @@ namespace AppRoomGameBackend.Controllers
     [Route("api/Inventories")]
     public class InventoryController : ControllerBase
     {
+        private readonly AppRoomGameDbContext _context;
+
+        public InventoryController(AppRoomGameDbContext context)
+        {
+            _context = context;
+        }
+
+
         private static Character character = new Character
         {
             Id = 1,
@@ -16,13 +25,20 @@ namespace AppRoomGameBackend.Controllers
             Mana = 50,
             Gold = 500
         };
+        private static List<Item> items = new List<Item>
+        {
+            new Item { Id = 1, Name = "Sword", Type = "Weapon", Quantity = 1 },
+            new Item { Id = 2, Name = "Shield", Type = "Armor", Quantity = 1 },
+            new Item { Id = 3, Name = "Health Potion", Type = "Consumable", Quantity = 5 }
+        };
 
 
 
         [HttpPost()]
         public IActionResult AddItem([FromBody] Item item)
         {
-            character.Inventory.Add(item);
+            _context.Items.Add(item);
+            _context.SaveChanges();
 
             return Ok(item);
         }
@@ -31,14 +47,15 @@ namespace AppRoomGameBackend.Controllers
         [HttpDelete("{id}")]
         public IActionResult RemoveItem(int id)
         {
-            var item = character.Inventory.FirstOrDefault(x => x.Id == id);
+            var item = _context.Items.FirstOrDefault(x => x.Id == id);
 
             if (item == null)
             {
                 return NotFound("İtem Bulunamadı!");
             }
 
-            character.Inventory.Remove(item);
+            _context.Items.Remove(item);
+            _context.SaveChanges();
 
             return Ok("İtem silindi.");
 
@@ -48,7 +65,7 @@ namespace AppRoomGameBackend.Controllers
         [HttpGet("{id}")]
         public IActionResult GetItem(int id)
         {
-            var item = character.Inventory.FirstOrDefault(x => x.Id==id);
+            var item = _context.Items.FirstOrDefault(x => x.Id==id);
 
             if (item == null)
             {
@@ -62,17 +79,18 @@ namespace AppRoomGameBackend.Controllers
         [HttpPut("{id}")]
         public IActionResult PutItem(int id, [FromBody] Item UpdatedItem)
         {
-            var item = character.Inventory.FirstOrDefault(x => x.Id == id);
+            var item = _context.Items.FirstOrDefault(x => x.Id == id);
 
             if (item == null)
             {
-                return NotFound("İtem BUlunamdı");
+                return NotFound("İtem Bulunamadı!");
             }
 
             item.Name = UpdatedItem.Name;
             item.Type = UpdatedItem.Type;
             item.Quantity = UpdatedItem.Quantity;
 
+            _context.SaveChanges();
             return Ok(item);
         }
     }
