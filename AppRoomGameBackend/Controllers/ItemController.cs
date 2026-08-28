@@ -16,21 +16,6 @@ namespace AppRoomGameBackend.Controllers
         }
 
 
-        private static Character character = new Character
-        {
-            Id = 1,
-            Name = "Warrior",
-            Level = 5,
-            Health = 100,
-            Mana = 50,
-            Gold = 500
-        };
-        private static List<Item> items = new List<Item>
-        {
-            new Item { Id = 1, Name = "Sword", Type = "Weapon", Quantity = 1 },
-            new Item { Id = 2, Name = "Shield", Type = "Armor", Quantity = 1 },
-            new Item { Id = 3, Name = "Health Potion", Type = "Consumable", Quantity = 5 }
-        };
 
 
 
