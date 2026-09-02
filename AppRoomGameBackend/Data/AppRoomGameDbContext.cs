@@ -10,5 +10,6 @@ namespace AppRoomGameBackend.Data
         }
         public DbSet<Character> Characters { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }

@@ -38,6 +38,6 @@ namespace AppRoomGameBackend.Models
             return true;
         }
         
-        public List<Item> Inventory { get; set; } = new List<Item>(); //Envanter Listesi
+        //public List<Item> Items { get; set; } = new List<Item>(); //Envanter Listesi
     }
 }

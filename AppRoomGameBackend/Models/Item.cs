@@ -1,10 +1,17 @@
-﻿namespace AppRoomGameBackend.Models
+﻿using System.Text.Json.Serialization;
+
+namespace AppRoomGameBackend.Models
 {
     public class Item
     {
-        public int Id { get; set; } //Envanter Id
-        public string Name { get; set; }//Envanter Name
-        public string Type { get; set; }//Envanter Sınıfı
-        public int Quantity { get; set; }//Envanter Miktarı
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public int Quantity { get; set; }
+
+
+        public int CategoryId { get; set; } 
+      
+        public Category? Category { get; set; }
     }
 }
