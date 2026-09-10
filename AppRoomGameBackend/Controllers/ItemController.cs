@@ -3,6 +3,8 @@ using AppRoomGameBackend.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using AppRoomGameBackend.DTOs.Item;
+
 namespace AppRoomGameBackend.Controllers
 {
     [ApiController]
@@ -22,27 +24,40 @@ namespace AppRoomGameBackend.Controllers
         public IActionResult GetItems()
         {
             var item = _context.Items
-                .Include(x => x.Category)
+                .Include(x => x.Category )
+                .Include(x => x.Character)
                 .ToList();
 
             return Ok(item);
         }
 
         [HttpPost()]
-        public IActionResult AddItem([FromBody] Item item)
+        public IActionResult AddItem([FromBody] ItemCreateDto dto)
         {
             var category = _context.Categories
-                .FirstOrDefault(x => x.Id == item.CategoryId);
+                .FirstOrDefault(x => x.Id == dto.CategoryId);
 
-            if (category==null)
+            var character = _context.Characters
+                .FirstOrDefault(x => x.Id == dto.CharacterId);
+
+            if (category==null || character==null)
             {
-                return NotFound("İşlem Bulunamadı!");
+                return NotFound("Kategori veya Karakter Bulunamadı!");
             }
+
+            var item = new Item
+            {
+                Name = dto.Name,
+                Type = dto.Type,
+                Quantity = dto.Quantity,
+                CategoryId = dto.CategoryId,
+                CharacterId = character.Id,
+                Category = category,
+                Character = character
+            };
 
             _context.Items.Add(item);
             _context.SaveChanges();
-
-            item.Category = category;
 
             return Ok(item);
         }
@@ -71,6 +86,7 @@ namespace AppRoomGameBackend.Controllers
         {
             var item = _context.Items
                 .Include(x =>x.Category)
+                .Include(x =>x.Character)
                 .FirstOrDefault(x => x.Id==id);
 
             if (item == null)
@@ -83,21 +99,34 @@ namespace AppRoomGameBackend.Controllers
 
 
         [HttpPut("{id}")]
-        public IActionResult PutItem(int id, [FromBody] Item UpdatedItem)
+        public IActionResult UpdateItem(int id, [FromBody] ItemUpdateDto dto)
         {
             var item = _context.Items.FirstOrDefault(x => x.Id == id);
 
-            if (item == null)
+            var category = _context.Categories
+                    .FirstOrDefault(x => x.Id == dto.CategoryId);
+
+            // Gönderilen CharacterId'nin veritabanında olup olmadığını kontrol et
+            var character = _context.Characters
+                .FirstOrDefault(x => x.Id == dto.CharacterId);
+            // category ve character nesnesini oluşturmamızın nedeni ,
+            // olmayan Id değei ile işlem yapınca 404 Found döndürebilmesi için.
+            if (category == null || character == null)
             {
-                return NotFound("İtem Bulunamadı!");
+                return NotFound("Kategori veya Karakter Bulunamadı!");
             }
 
-            item.Name = UpdatedItem.Name;
-            item.Type = UpdatedItem.Type;
-            item.Quantity = UpdatedItem.Quantity;
+            
+            item.Name = dto.Name;
+            item.Type = dto.Type;
+            item.Quantity = dto.Quantity;
+            item.CategoryId = dto.CategoryId;
+            item.CharacterId = dto.CharacterId;
 
+        
             _context.SaveChanges();
             return Ok(item);
+ 
         }
     }
 }

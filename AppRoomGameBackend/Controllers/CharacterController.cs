@@ -3,6 +3,8 @@ using AppRoomGameBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using AppRoomGameBackend.DTOs.Character;
+
 namespace AppRoomGameBackend.Controllers
 {
     [ApiController]
@@ -28,7 +30,9 @@ namespace AppRoomGameBackend.Controllers
         [HttpGet("{id}")]
         public IActionResult GetCharacter(int id)
         {
-            var character = _context.Characters.FirstOrDefault(x => x.Id==id);
+            var character = _context.Characters
+                .Include(x => x.Items)
+                .FirstOrDefault(x => x.Id==id);
 
             if(character == null)
             {
@@ -40,8 +44,19 @@ namespace AppRoomGameBackend.Controllers
 
 
         [HttpPost]
-        public IActionResult AddCharacters([FromBody] Character character)
+        public IActionResult AddCharacters([FromBody] 
+        CharacterCreateDto dto)                                                              // [FromBody] ile API isteğinin gövdesinden gelen karakter oluşturma
+                                                                             // verileri CharacterCreateDto nesnesine aktarılır
         {
+            Character character = new Character
+            {
+                Name = dto.Name,
+                Level = dto.Level,
+                Health = dto.Health,
+                Mana = dto.Mana,
+                Gold = dto.Gold,
+                XP = dto.XP
+            };
             _context.Characters.Add(character);
             _context.SaveChanges();
 
@@ -65,21 +80,23 @@ namespace AppRoomGameBackend.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutCharacter(int id, [FromBody] Character UpdatedCharacter)
+        public IActionResult UpdateCharacter(int id, [FromBody] 
+        CharacterUpdateDto dto)
         {
-            var character = _context.Characters.FirstOrDefault(x => x.Id==id);
+            var character = _context.Characters
+                .FirstOrDefault(x => x.Id==id);
 
             if(character == null)
             {
                 return NotFound("İşlem Bulunamadı!");
             }
 
-            character.Name = UpdatedCharacter.Name;
-            character.Level= UpdatedCharacter.Level;
-            character.Health = UpdatedCharacter.Health;
-            character.Mana = UpdatedCharacter.Mana;
-            character.Gold = UpdatedCharacter.Gold;
-            character.XP = UpdatedCharacter.XP;
+            character.Name = dto.Name;
+            character.Level= dto.Level;
+            character.Health = dto.Health;
+            character.Mana = dto.Mana;
+            character.Gold = dto.Gold;
+            character.XP = dto.XP;
 
             _context.SaveChanges();
             return Ok(character);

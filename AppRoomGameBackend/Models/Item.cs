@@ -9,9 +9,12 @@ namespace AppRoomGameBackend.Models
         public string Type { get; set; }
         public int Quantity { get; set; }
 
-
+        //Category ---> Items
         public int CategoryId { get; set; } 
-      
         public Category? Category { get; set; }
+
+        //Character ---> Items
+        public int? CharacterId { get; set; }
+        public Character? Character { get; set; }
     }
 }

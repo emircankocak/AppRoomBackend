@@ -3,6 +3,8 @@ using AppRoomGameBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using AppRoomGameBackend.DTOs.Category;
+
 namespace AppRoomGameBackend.Controllers
 {
     [ApiController]
@@ -36,8 +38,13 @@ namespace AppRoomGameBackend.Controllers
 
 
         [HttpPost]
-        public IActionResult AddCategory(Category category)
+        public IActionResult AddCategory( [FromBody] CategoryCreateDto dto)
         {
+            var category = new Category
+            {
+                Name = dto.Name
+            };
+
             _context.Categories.Add(category);
             _context.SaveChanges();
 
@@ -46,7 +53,7 @@ namespace AppRoomGameBackend.Controllers
 
 
         [HttpPut("{id}")]
-        public IActionResult PutCategory(int id,[FromBody] Category UpdateCategory)
+        public IActionResult UpdateCategory(int id,[FromBody] CategoryUpdateDto dto)
         {
             var category = _context.Categories.FirstOrDefault(x => x.Id == id);
 
@@ -55,7 +62,7 @@ namespace AppRoomGameBackend.Controllers
                 return NotFound("İşlem Bulunamadı!");
             }
 
-            category.Name = UpdateCategory.Name;
+            category.Name = dto.Name;
             _context.SaveChanges();
 
             return Ok(category);

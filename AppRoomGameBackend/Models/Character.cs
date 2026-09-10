@@ -1,4 +1,5 @@
-﻿using System.Xml.XPath;
+﻿using System.Text.Json.Serialization;
+using System.Xml.XPath;
 
 namespace AppRoomGameBackend.Models
 {
@@ -12,6 +13,9 @@ namespace AppRoomGameBackend.Models
         public int Gold { get; set; }
 
         public int XP { get; set; }
+
+        [JsonIgnore]
+        public List<Item>? Items { get; set; }// One-to-Many : Bir character'in birden fazla Item'i olabilir. 
 
         public void AddExperience(int amount)//Level Kontrolü
         {
@@ -38,6 +42,6 @@ namespace AppRoomGameBackend.Models
             return true;
         }
         
-        //public List<Item> Items { get; set; } = new List<Item>(); //Envanter Listesi
+        
     }
 }
