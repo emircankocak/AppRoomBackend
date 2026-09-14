@@ -1,7 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using AppRoomGameBackend.Data;
 using AppRoomGameBackend.Models;
+
+using AppRoomGameBackend.Middleware;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -24,6 +29,8 @@ Console.WriteLine($"İşlem Başarılı mı: {result}");
 Console.WriteLine($"Geriye Kalan Gold Miktarı:{character.Gold}");
 //=====================================
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseSwagger();
 app.UseSwaggerUI();

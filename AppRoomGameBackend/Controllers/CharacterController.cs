@@ -18,6 +18,8 @@ namespace AppRoomGameBackend.Controllers
             _context = context;
         }
 
+        
+
         [HttpGet]
         public IActionResult GetCharacters()
         {
@@ -27,7 +29,7 @@ namespace AppRoomGameBackend.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id} ")]
         public IActionResult GetCharacter(int id)
         {
             var character = _context.Characters
@@ -42,6 +44,12 @@ namespace AppRoomGameBackend.Controllers
             return Ok(character);
         }
 
+        //Test amaçlı hata fırlatma
+        [HttpGet("test-error")]
+        public IActionResult TestError()
+        {
+            throw new Exception("Test amaçlı hata");
+        }
 
         [HttpPost]
         public IActionResult AddCharacters([FromBody] 
