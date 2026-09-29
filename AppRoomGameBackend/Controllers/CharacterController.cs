@@ -48,7 +48,12 @@ namespace AppRoomGameBackend.Controllers
         [HttpGet("test-error")]
         public IActionResult TestError()
         {
-            throw new Exception("Test amaçlı hata");
+            return StatusCode(500, new
+            {
+                statusCode = 500,
+                error = "Internal Server Error",
+                message = "Sunucu tarafında beklenmeyen hata oluştu."
+            });
         }
 
         [HttpPost]

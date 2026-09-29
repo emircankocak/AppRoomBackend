@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using AppRoomGameBackend.DTOs.Category;
-
+using Microsoft.AspNetCore.Authorization;
 namespace AppRoomGameBackend.Controllers
 {
     [ApiController]
@@ -18,7 +18,7 @@ namespace AppRoomGameBackend.Controllers
             _context = context;
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult GetCategories()
         {
@@ -28,6 +28,7 @@ namespace AppRoomGameBackend.Controllers
         }
 
 
+        
         [HttpGet("{id}")]
         public IActionResult GetCategories(int id)
         {
@@ -37,6 +38,7 @@ namespace AppRoomGameBackend.Controllers
         }
 
 
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public IActionResult AddCategory( [FromBody] CategoryCreateDto dto)
         {

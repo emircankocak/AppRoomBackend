@@ -34,7 +34,7 @@ namespace AppRoomGameBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("AppRoomGameBackend.Models.Character", b =>
@@ -66,7 +66,7 @@ namespace AppRoomGameBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Characters");
+                    b.ToTable("Characters", (string)null);
                 });
 
             modelBuilder.Entity("AppRoomGameBackend.Models.Item", b =>
@@ -100,7 +100,7 @@ namespace AppRoomGameBackend.Migrations
 
                     b.HasIndex("CharacterId");
 
-                    b.ToTable("Items");
+                    b.ToTable("Items", (string)null);
                 });
 
             modelBuilder.Entity("AppRoomGameBackend.Models.User", b =>
@@ -119,13 +119,17 @@ namespace AppRoomGameBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AppRoomGameBackend.Models.Item", b =>

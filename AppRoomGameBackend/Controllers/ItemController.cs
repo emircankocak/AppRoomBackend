@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using AppRoomGameBackend.DTOs.Item;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppRoomGameBackend.Controllers
 {
@@ -19,7 +20,7 @@ namespace AppRoomGameBackend.Controllers
         }
 
 
-
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public IActionResult GetItems()
         {
@@ -31,6 +32,25 @@ namespace AppRoomGameBackend.Controllers
             return Ok(item);
         }
 
+
+        [HttpGet("{id}")]
+        public IActionResult GetItem(int id)
+        {
+            var item = _context.Items
+                .Include(x => x.Category)
+                .Include(x => x.Character)
+                .FirstOrDefault(x => x.Id == id);
+
+            if (item == null)
+            {
+                return NotFound("İtem Bulunamadı!");
+            }
+
+            return Ok(item);
+        }
+
+
+        [Authorize(Roles ="Admin")] // Sadece Admin rolüne sahip kullanıcılar bu endpoint'e erişebilir
         [HttpPost()]
         public IActionResult AddItem([FromBody] ItemCreateDto dto)
         {
@@ -62,7 +82,7 @@ namespace AppRoomGameBackend.Controllers
             return Ok(item);
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult RemoveItem(int id)
         {
@@ -81,23 +101,7 @@ namespace AppRoomGameBackend.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        public IActionResult GetItem(int id)
-        {
-            var item = _context.Items
-                .Include(x =>x.Category)
-                .Include(x =>x.Character)
-                .FirstOrDefault(x => x.Id==id);
-
-            if (item == null)
-            {
-                return NotFound("İtem Bulunamadı!");
-            }
-
-            return Ok(item);
-        }
-
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public IActionResult UpdateItem(int id, [FromBody] ItemUpdateDto dto)
         {
