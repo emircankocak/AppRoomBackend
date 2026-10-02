@@ -111,6 +111,16 @@ namespace AppRoomGameBackend.Controllers
             character.Gold = dto.Gold;
             character.XP = dto.XP;
 
+            if(string.IsNullOrWhiteSpace(character.Name) ||
+               character.Name.Length < 3 ||
+               character.Mana < 0 ||
+               character.Health < 0 ||
+               character.Gold < 0 ||
+               character.XP < 0)
+            {
+                return BadRequest("Geçersiz karakter bilgileri.");
+            }
+
             _context.SaveChanges();
             return Ok(character);
         }
